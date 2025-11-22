@@ -8,7 +8,7 @@
     <style>
         :root {
             /* Light (default) theme variables */
-            --primary: #686868; /* brand accent */
+            --primary: #000000; /* brand accent */
             --secondary: #ff5e00;
             --dark: #0b0b0d; /* primary text (dark on light) */
             --light: #ffffff; /* page background (white default) */
@@ -28,10 +28,10 @@
 
         /* Dark theme overrides when .dark-theme class is placed on <html> */
         .dark-theme {
-            --primary: #2b6cb0;
-            --secondary: #ff8a3d;
+            --primary: #000000;
+            --secondary: #12afc4;
             --dark: #e6e6e6; /* text color on dark */
-            --light: #0b0b0d; /* page background dark */
+            --light: #5c5c5c; /* page background dark */
             --surface: #0f1112;
             --muted: rgba(255,255,255,0.65);
             --text: var(--dark);
@@ -40,6 +40,18 @@
             --placeholder: rgba(255,255,255,0.6);
             --gray: rgb(140,140,140);
             --shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Ensure button text is readable in dark theme */
+        .dark-theme .btn,
+        .dark-theme .btn-primary,
+        .dark-theme .btn-outline,
+        .dark-theme .search-bar button,
+        .dark-theme .search-button {
+            color: var(--light);
+        }
+        .dark-theme .btn-outline {
+            border-color: rgba(255,255,255,0.12);
         }
 
         * {
@@ -323,8 +335,8 @@
             padding: 0 25px;
             /* match select/input height so it sits on same baseline */
             height: 40px;
-            /* visual nudge: move button 4px down */
-            transform: translateY(4px);
+            /* visual nudge: move button 7px down */
+            transform: translateY(7px);
             font-size: 16px;
             cursor: pointer;
             transition: var(--transition);
@@ -338,6 +350,13 @@
 
         .search-button:hover {
             background-color: #004494;
+        }
+
+        /* Sticky header: enable smooth hide/show transitions for both top-bar and header */
+        .top-bar,
+        header {
+            transition: transform 0.22s ease, opacity 0.22s ease;
+            will-change: transform;
         }
 
         /* Featured Vehicles */
@@ -715,6 +734,14 @@
                 margin-top: 10px;
                 width: 100%;
             }
+
+            /* When the page has .hide-top-on-scroll class, slide top-bar and header up and hide them */
+            .hide-top-on-scroll .top-bar,
+            .hide-top-on-scroll header {
+                transform: translateY(-120%);
+                opacity: 0;
+                pointer-events: none;
+            }
         }
     </style>
 </head>
@@ -723,19 +750,15 @@
     <div class="top-bar">
         <div class="container top-bar-content">
             <div class="contact-info">
-                <span><i class="fas fa-phone"></i> +995 32 2 123 456</span>
+                <span><i class="fas fa-phone"></i> +995 558 36 35 36</span>
                 <span><i class="fas fa-envelope"></i> info@rustavelirides.ge</span>
             </div>
             <div style="display:flex;align-items:center;gap:12px;">
-                <!-- Theme toggle button (default: light) -->
-                <button id="theme-toggle" aria-pressed="false" title="Toggle dark mode" style="background:transparent;border:none;color:var(--dark);cursor:pointer;font-size:16px;display:flex;align-items:center;gap:8px">
-                    <i class="fa-regular fa-sun" aria-hidden="true"></i>
-                    <span class="sr-only">Toggle theme</span>
+                <!-- Theme toggle button (shows current theme text) -->
+                <button id="theme-toggle" aria-pressed="false" title="Switch to Dark theme" style="background:transparent;border:none;color:var(--light);cursor:pointer;font-size:14px;padding:6px 8px;border-radius:6px">
+                    🌙 Dark
                 </button>
-                <div class="auth-links">
-                    <a href="signin.html"><i class="fas fa-user"></i> Sign In</a>
-                    <a href="register.html"><i class="fas fa-user-plus"></i> Register</a>
-                </div>
+                <!-- Sign In / Register removed per request -->
             </div>
         </div>
     </div>
@@ -1041,7 +1064,7 @@
                     <ul class="footer-links">
                         <li><i class="fas fa-map-marker-alt"></i> , Tbilisi</li>
                         <li><i class="fas fa-phone"></i> +995 558 36 35 36</li>
-                        <li><i class="fas fa-envelope"></i> rustavelirides@gmail.com</li>
+                        <li><i class="fas fa-envelope"></i> info@rustavelirides.ge</li>
                         <li><i class="fas fa-clock"></i> Mon-Sun: 8:00 - 22:00</li>
                     </ul>
                 </div>
@@ -1121,12 +1144,20 @@
             function applyTheme(theme){
                 if (theme === 'dark'){
                     document.documentElement.classList.add('dark-theme');
-                    themeToggle.setAttribute('aria-pressed','true');
-                    themeToggle.innerHTML = '<i class="fas fa-moon" aria-hidden="true"></i>';
+                    if (themeToggle) {
+                        themeToggle.setAttribute('aria-pressed','true');
+                        // show the action: clicking will switch to Light
+                        themeToggle.textContent = '☀️ Light';
+                        themeToggle.title = 'Switch to Light theme';
+                    }
                 } else {
                     document.documentElement.classList.remove('dark-theme');
-                    themeToggle.setAttribute('aria-pressed','false');
-                    themeToggle.innerHTML = '<i class="fa-regular fa-sun" aria-hidden="true"></i>';
+                    if (themeToggle) {
+                        themeToggle.setAttribute('aria-pressed','false');
+                        // show the action: clicking will switch to Dark
+                        themeToggle.textContent = '🌙 Dark';
+                        themeToggle.title = 'Switch to Dark theme';
+                    }
                 }
             }
 
@@ -1146,6 +1177,54 @@
                     try{ localStorage.setItem('site-theme', next); }catch(e){}
                 });
             }
+
+            // Hide top menu on mobile while scrolling down, reveal on scroll up
+            (function(){
+                let lastY = window.pageYOffset || 0;
+                let ticking = false;
+
+                function onScroll() {
+                    const currentY = window.pageYOffset || 0;
+                    const mobile = window.innerWidth <= 768;
+                    const html = document.documentElement;
+
+                    if (!mobile) {
+                        // ensure visible on larger screens
+                        html.classList.remove('hide-top-on-scroll');
+                        lastY = currentY;
+                        return;
+                    }
+
+                    // small threshold to avoid toggle on micro-scrolls
+                    if (Math.abs(currentY - lastY) < 10) {
+                        ticking = false;
+                        return;
+                    }
+
+                    if (currentY > lastY && currentY > 50) {
+                        // scrolling down -> hide
+                        html.classList.add('hide-top-on-scroll');
+                    } else {
+                        // scrolling up -> show
+                        html.classList.remove('hide-top-on-scroll');
+                    }
+
+                    lastY = currentY;
+                    ticking = false;
+                }
+
+                window.addEventListener('scroll', function(){
+                    if (!ticking) {
+                        window.requestAnimationFrame(onScroll);
+                        ticking = true;
+                    }
+                }, { passive: true });
+
+                // On resize/reset ensure class removed when switching to desktop
+                window.addEventListener('resize', function(){
+                    if (window.innerWidth > 768) document.documentElement.classList.remove('hide-top-on-scroll');
+                });
+            })();
 
             // Event delegation for Details and Rent Now
             document.body.addEventListener('click', function(e) {
