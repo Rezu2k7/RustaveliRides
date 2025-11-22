@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Search Results - Rustaveli Rides</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body{padding:24px;font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif;background:var(--light);color:var(--dark)}
+    .card{background:var(--surface);padding:16px;border-radius:8px;margin:8px 0;box-shadow:var(--shadow)}
+    a.back{display:inline-block;margin-bottom:12px;color:var(--secondary)}
+  </style>
+</head>
+<body>
+  <a class="back" href="index.html">← Back to home</a>
+  <h1>Search Results (demo)</h1>
+  <div id="summary" class="card"></div>
+  <div id="results"></div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const loc = params.get('loc') || '(any)';
+    const from = params.get('from') || '(any)';
+    const to = params.get('to') || '(any)';
+    const type = params.get('type') || '(any)';
+
+    document.getElementById('summary').innerHTML = `
+      <strong>Location:</strong> ${decodeURIComponent(loc)}<br>
+      <strong>From:</strong> ${decodeURIComponent(from)} <strong>To:</strong> ${decodeURIComponent(to)}<br>
+      <strong>Vehicle type:</strong> ${decodeURIComponent(type)}
+    `;
+
+    // Demo results (link to details pages)
+    const sample = [
+      {slug:'toyota-camry-2022', title:'Toyota Camry 2022', price:'₾85/day'},
+      {slug:'mercedes-e-class', title:'Mercedes E-Class', price:'₾220/day'},
+      {slug:'toyota-land-cruiser', title:'Toyota Land Cruiser', price:'₾180/day'}
+    ];
+
+    const out = document.getElementById('results');
+    sample.forEach(v => {
+      const el = document.createElement('div');
+      el.className = 'card';
+      el.innerHTML = `<h3>${v.title}</h3><div>${v.price}</div><div style="margin-top:8px"><a href="details.html?vehicle=${v.slug}">Details</a> · <a href="booking.html?vehicle=${v.slug}">Rent Now</a></div>`;
+      out.appendChild(el);
+    });
+  </script>
+</body>
+</html>

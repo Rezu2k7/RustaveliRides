@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="style.css">
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,16 +7,39 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #5e5e5e;
+            /* Light (default) theme variables */
+            --primary: #686868; /* brand accent */
             --secondary: #ff5e00;
-            --dark: #000000;
-            --light: #ffffff;
-            --gray: rgb(70, 70, 70);
+            --dark: #0b0b0d; /* primary text (dark on light) */
+            --light: #ffffff; /* page background (white default) */
+            --surface: #ffffff; /* card / panel background */
+            --muted: rgba(0,0,0,0.6);
+            --text: var(--dark);
+            --surface-border: rgba(0,0,0,0.08);
+            --input-bg: rgba(0,0,0,0.03);
+            --placeholder: rgba(0,0,0,0.45);
+            --gray: rgb(100, 100, 100);
             --success: #28a745;
             --danger: #dc3545;
             --border-radius: 8px;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
             --transition: all 0.3s ease;
+        }
+
+        /* Dark theme overrides when .dark-theme class is placed on <html> */
+        .dark-theme {
+            --primary: #2b6cb0;
+            --secondary: #ff8a3d;
+            --dark: #e6e6e6; /* text color on dark */
+            --light: #0b0b0d; /* page background dark */
+            --surface: #0f1112;
+            --muted: rgba(255,255,255,0.65);
+            --text: var(--dark);
+            --surface-border: rgba(255,255,255,0.06);
+            --input-bg: rgba(255,255,255,0.03);
+            --placeholder: rgba(255,255,255,0.6);
+            --gray: rgb(140,140,140);
+            --shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
         }
 
         * {
@@ -28,9 +50,11 @@
         }
 
         body {
-            background-color: #f5f5f5;
+            background-color: var(--light);
             color: var(--dark);
             line-height: 1.6;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
         }
 
         .container {
@@ -42,7 +66,7 @@
 
         /* Header Styles */
         header {
-            background-color: white;
+            background-color: rgba(255,255,255,0.02);
             box-shadow: var(--shadow);
             position: sticky;
             top: 0;
@@ -51,7 +75,7 @@
 
         .top-bar {
             background-color: var(--primary);
-            color: white;
+            color: var(--light);
             padding: 8px 0;
             font-size: 14px;
         }
@@ -67,7 +91,7 @@
         }
 
         .auth-links a {
-            color: white;
+            color: var(--light);
             text-decoration: none;
             margin-left: 15px;
         }
@@ -102,26 +126,56 @@
             max-width: 500px;
             margin: 0 20px;
             position: relative;
+            display: flex;
+            align-items: center;
         }
 
+        /* Header/global search input — pill, subtle surface, room for button */
         .search-bar input {
             width: 100%;
-            padding: 12px 20px;
-            border: 1px solid #ddd;
+            padding: 10px 52px 10px 18px; /* room on right for button */
+            border: 1px solid var(--surface-border);
+            background-color: var(--input-bg);
+            color: var(--text);
             border-radius: 30px;
-            font-size: 16px;
+            font-size: 15px;
+            outline: none;
+            transition: box-shadow 0.18s ease, background-color 0.18s ease;
         }
 
+        .search-bar input::placeholder {
+            color: var(--placeholder);
+        }
+
+        /* Search button inside header — vertically centered, matching pill shape */
         .search-bar button {
             position: absolute;
-            right: 5px;
-            top: 5px;
-            background: var(--primary);
-            color: white;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--secondary);
+            color: var(--light);
             border: none;
-            border-radius: 30px;
-            padding: 7px 15px;
+            border-radius: 999px;
+            padding: 8px 12px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.35);
+            transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+        }
+
+        .search-bar button:hover {
+            transform: translateY(-50%) scale(1.03);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.45);
+        }
+
+        /* On focus make the input stand out */
+        .search-bar input:focus {
+            box-shadow: 0 6px 18px rgba(0,0,0,0.45) inset;
+            background-color: rgba(255,255,255,0.04);
         }
 
         .user-actions a {
@@ -133,7 +187,7 @@
 
         /* Navigation */
         nav {
-            background-color: var(--dark);
+            background-color: transparent;
         }
 
         .nav-links {
@@ -146,7 +200,7 @@
         }
 
         .nav-links a {
-            color: white;
+            color: var(--text);
             text-decoration: none;
             padding: 15px 20px;
             display: block;
@@ -154,12 +208,12 @@
         }
 
         .nav-links a:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(0, 0, 0, 0.06);
         }
 
         .dropdown {
             position: absolute;
-            background-color: white;
+            background-color: var(--surface);
             box-shadow: var(--shadow);
             min-width: 200px;
             display: none;
@@ -167,9 +221,9 @@
         }
 
         .dropdown a {
-            color: var(--dark);
+            color: var(--text);
             padding: 12px 15px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--surface-border);
         }
 
         .nav-links li:hover .dropdown {
@@ -178,10 +232,10 @@
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');
+            background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)), url('https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');
             background-size: cover;
             background-position: center;
-            color: white;
+            color: var(--light);
             padding: 80px 0;
             text-align: center;
         }
@@ -216,7 +270,7 @@
 
         /* Search Form */
         .search-form {
-            background-color: white;
+            background-color: var(--surface);
             border-radius: var(--border-radius);
             padding: 25px;
             margin-top: -50px;
@@ -229,6 +283,40 @@
             display: flex;
             flex-wrap: wrap;
             margin: 0 -10px;
+            align-items: center; /* keep inputs and button on same horizontal line */
+        }
+
+        /* small controls to tweak the search button position */
+        .offset-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            min-width: 220px;
+            padding: 6px 10px;
+        }
+
+        .offset-controls label {
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        .offset-controls input[type="number"] {
+            width: 60px;
+            padding: 6px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--surface-border);
+            background: var(--input-bg);
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .offset-controls button.reset-offset {
+            padding: 6px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--surface-border);
+            background: transparent;
+            color: var(--text);
+            cursor: pointer;
         }
 
         .form-group {
@@ -248,20 +336,33 @@
         .form-group input {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--surface-border);
+            background-color: transparent;
+            color: var(--text);
             border-radius: var(--border-radius);
+            min-height: 44px; /* match button height for aligned look */
+            display: inline-flex;
+            align-items: center; /* vertically center contents */
+            line-height: 1;
         }
 
         .search-button {
             background-color: var(--primary);
-            color: white;
+            color: var(--light);
             border: none;
-            border-radius: var(--border-radius);
-            padding: 12px 25px;
+            border-radius: 30px; /* pill style to match inputs */
+            padding: 0 25px;
+            /* match select/input height so it sits on same baseline */
+            height: 40px;
             font-size: 16px;
             cursor: pointer;
             transition: var(--transition);
-            align-self: flex-end;
+            /* center vertically with other controls in the row */
+            align-self: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1; /* avoid extra vertical offset */
         }
 
         .search-button:hover {
@@ -291,7 +392,7 @@
         }
 
         .vehicle-card {
-            background-color: white;
+            background-color: var(--surface);
             border-radius: var(--border-radius);
             overflow: hidden;
             box-shadow: var(--shadow);
@@ -305,7 +406,7 @@
 
         .vehicle-image {
             height: 180px;
-            background-color: #eee;
+            background-color: #111316;
             position: relative;
             overflow: hidden;
         }
@@ -340,7 +441,7 @@
         .vehicle-title {
             font-size: 18px;
             margin-bottom: 10px;
-            color: var(--primary);
+            color: var(--dark);
         }
 
         .vehicle-details {
@@ -412,7 +513,7 @@
         }
 
         .category-card {
-            background-color: white;
+            background-color: var(--surface);
             border-radius: var(--border-radius);
             padding: 20px;
             text-align: center;
@@ -478,8 +579,8 @@
 
         /* Footer */
         footer {
-            background-color: var(--dark);
-            color: white;
+            background-color: #070708;
+            color: var(--muted);
             padding: 50px 0 20px;
         }
 
@@ -589,6 +690,60 @@
             .form-group {
                 min-width: 100%;
             }
+
+            /* Search results and modal styles */
+            .search-results {
+                margin: 20px auto 40px;
+                padding: 15px;
+                background: transparent;
+                color: var(--dark);
+                border-radius: var(--border-radius);
+            }
+
+            /* Modal (simple) */
+            .modal-backdrop {
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.6);
+                display: none;
+                align-items: center;
+                justify-content: center;
+                z-index: 2000;
+                padding: 20px;
+            }
+
+            .modal-backdrop.show {
+                display: flex;
+            }
+
+            .modal-content {
+                background: var(--surface);
+                color: var(--dark);
+                border-radius: 10px;
+                max-width: 640px;
+                width: 100%;
+                box-shadow: var(--shadow);
+                padding: 20px;
+                position: relative;
+            }
+
+            .modal-close {
+                position: absolute;
+                right: 12px;
+                top: 12px;
+                background: transparent;
+                border: none;
+                color: var(--muted);
+                font-size: 18px;
+                cursor: pointer;
+            }
+
+            /* On small screens make the search button full width and spaced */
+            .search-button {
+                align-self: stretch;
+                margin-top: 10px;
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -600,9 +755,16 @@
                 <span><i class="fas fa-phone"></i> +995 32 2 123 456</span>
                 <span><i class="fas fa-envelope"></i> info@rustavelirides.ge</span>
             </div>
-            <div class="auth-links">
-                <a href="#"><i class="fas fa-user"></i> Sign In</a>
-                <a href="#"><i class="fas fa-user-plus"></i> Register</a>
+            <div style="display:flex;align-items:center;gap:12px;">
+                <!-- Theme toggle button (default: light) -->
+                <button id="theme-toggle" aria-pressed="false" title="Toggle dark mode" style="background:transparent;border:none;color:var(--dark);cursor:pointer;font-size:16px;display:flex;align-items:center;gap:8px">
+                    <i class="fa-regular fa-sun" aria-hidden="true"></i>
+                    <span class="sr-only">Toggle theme</span>
+                </button>
+                <div class="auth-links">
+                    <a href="signin.html"><i class="fas fa-user"></i> Sign In</a>
+                    <a href="register.html"><i class="fas fa-user-plus"></i> Register</a>
+                </div>
             </div>
         </div>
     </div>
@@ -616,13 +778,11 @@
                     <h1>RUSTAVELi <span>Rides</span></h1>
                 </div>
                 <div class="search-bar">
-                    <input type="text" placeholder="Search for vehicles...">
-                    <button><i class="fas fa-search"></i></button>
+                    <input id="global-search" type="text" placeholder="Search for vehicles...">
+                    <button id="global-search-btn"><i class="fas fa-search"></i></button>
                 </div>
                 <div class="user-actions">
-                    <a href="#"><i class="fas fa-heart"></i></a>
-                    <a href="#"><i class="fas fa-bell"></i></a>
-                    <a href="#"><i class="fas fa-user-circle"></i></a>
+                    <!-- Icons removed as requested -->
                 </div>
             </div>
         </div>
@@ -642,7 +802,6 @@
                             <a href="#">Premium Collection</a>
                         </div>
                     </li>
-                    <li><a href="#">Special Offers</a></li>
                     <li><a href="#">Locations</a></li>
                     <li><a href="#">How It Works</a></li>
                     <li><a href="#">About Us</a></li>
@@ -693,9 +852,23 @@
                         <option value="van">Van/Minibus</option>
                     </select>
                 </div>
+                <!-- Offset controls: X (horizontal) and Y (vertical) -->
+                <div class="offset-controls" title="Adjust search button X/Y offsets">
+                    <label for="search-offset-x">X</label>
+                    <input id="search-offset-x" type="number" step="1" value="0" aria-label="Search button X offset in pixels">
+                    <label for="search-offset-y">Y</label>
+                    <input id="search-offset-y" type="number" step="1" value="0" aria-label="Search button Y offset in pixels">
+                    <button class="reset-offset" id="reset-offset" type="button" title="Reset offsets">Reset</button>
+                </div>
+
                 <button class="search-button">Search Vehicles</button>
             </div>
         </div>
+    </div>
+
+    <!-- Search results (client-side demo) -->
+    <div class="container">
+        <div id="search-results" class="search-results" aria-live="polite"></div>
     </div>
 
     <!-- Featured Vehicles -->
@@ -706,7 +879,7 @@
 
         <div class="vehicles-grid">
             <!-- Vehicle 1 -->
-            <div class="vehicle-card">
+                <div class="vehicle-card" data-vehicle="toyota-camry-2022">
                 <div class="vehicle-image">
                     <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Toyota Camry">
                     <div class="vehicle-badge">Popular</div>
@@ -720,14 +893,14 @@
                     </div>
                     <div class="vehicle-price">₾85 <span>/day</span></div>
                     <div class="vehicle-actions">
-                        <a href="#" class="btn btn-outline">Details</a>
-                        <a href="#" class="btn btn-primary">Rent Now</a>
+                        <a href="details.html?vehicle=toyota-camry-2022" class="btn btn-outline">Details</a>
+                        <a href="booking.html?vehicle=toyota-camry-2022" class="btn btn-primary">Rent Now</a>
                     </div>
                 </div>
             </div>
 
             <!-- Vehicle 2 -->
-            <div class="vehicle-card">
+            <div class="vehicle-card" data-vehicle="mercedes-e-class">
                 <div class="vehicle-image">
                     <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Mercedes-Benz">
                     <div class="vehicle-badge">Luxury</div>
@@ -741,14 +914,14 @@
                     </div>
                     <div class="vehicle-price">₾220 <span>/day</span></div>
                     <div class="vehicle-actions">
-                        <a href="#" class="btn btn-outline">Details</a>
-                        <a href="#" class="btn btn-primary">Rent Now</a>
+                        <a href="details.html?vehicle=mercedes-e-class" class="btn btn-outline">Details</a>
+                        <a href="booking.html?vehicle=mercedes-e-class" class="btn btn-primary">Rent Now</a>
                     </div>
                 </div>
             </div>
 
             <!-- Vehicle 3 -->
-            <div class="vehicle-card">
+            <div class="vehicle-card" data-vehicle="toyota-land-cruiser">
                 <div class="vehicle-image">
                     <img src="https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="SUV">
                     <div class="vehicle-badge">4x4</div>
@@ -762,14 +935,14 @@
                     </div>
                     <div class="vehicle-price">₾180 <span>/day</span></div>
                     <div class="vehicle-actions">
-                        <a href="#" class="btn btn-outline">Details</a>
-                        <a href="#" class="btn btn-primary">Rent Now</a>
+                        <a href="details.html?vehicle=toyota-land-cruiser" class="btn btn-outline">Details</a>
+                        <a href="booking.html?vehicle=toyota-land-cruiser" class="btn btn-primary">Rent Now</a>
                     </div>
                 </div>
             </div>
 
             <!-- Vehicle 4 -->
-            <div class="vehicle-card">
+            <div class="vehicle-card" data-vehicle="hyundai-accent">
                 <div class="vehicle-image">
                     <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Economy Car">
                     <div class="vehicle-badge">Economy</div>
@@ -783,8 +956,8 @@
                     </div>
                     <div class="vehicle-price">₾55 <span>/day</span></div>
                     <div class="vehicle-actions">
-                        <a href="#" class="btn btn-outline">Details</a>
-                        <a href="#" class="btn btn-primary">Rent Now</a>
+                        <a href="details.html?vehicle=hyundai-accent" class="btn btn-outline">Details</a>
+                        <a href="booking.html?vehicle=hyundai-accent" class="btn btn-primary">Rent Now</a>
                     </div>
                 </div>
             </div>
@@ -885,7 +1058,6 @@
                     <ul class="footer-links">
                         <li><a href="#">Home</a></li>
                         <li><a href="#">Vehicles</a></li>
-                        <li><a href="#">Special Offers</a></li>
                         <li><a href="#">Locations</a></li>
                         <li><a href="#">About Us</a></li>
                     </ul>
@@ -919,17 +1091,207 @@
         </div>
     </footer>
 
+    <!-- Modal markup -->
+    <div id="modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="modal-content" role="document">
+            <button class="modal-close" aria-label="Close">&times;</button>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
     <script>
-        // Set minimum dates for pickup and dropoff
+        // Utility: safe getter
+        const $ = (sel, root = document) => root.querySelector(sel);
+
+        // Set minimum dates for pickup and dropoff and wire interactions
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];
-            document.getElementById('pickup-date').min = today;
-            document.getElementById('dropoff-date').min = today;
-            
-            // Update dropoff min date when pickup date changes
-            document.getElementById('pickup-date').addEventListener('change', function() {
-                document.getElementById('dropoff-date').min = this.value;
+            const pickup = document.getElementById('pickup-date');
+            const dropoff = document.getElementById('dropoff-date');
+            if (pickup) pickup.min = today;
+            if (dropoff) dropoff.min = today;
+
+            if (pickup) pickup.addEventListener('change', function() {
+                if (dropoff) dropoff.min = this.value;
             });
+
+            // Search button -> show client-side summary
+            const searchBtn = document.querySelector('.search-button');
+            if (searchBtn) {
+                // Redirect to a search results page with query params (simple client-side redirect)
+                searchBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const loc = encodeURIComponent(document.getElementById('pickup-location')?.value || '');
+                    const from = encodeURIComponent(document.getElementById('pickup-date')?.value || '');
+                    const to = encodeURIComponent(document.getElementById('dropoff-date')?.value || '');
+                    const type = encodeURIComponent(document.getElementById('vehicle-type')?.value || '');
+                    const params = new URLSearchParams();
+                    if (loc) params.set('loc', loc);
+                    if (from) params.set('from', from);
+                    if (to) params.set('to', to);
+                    if (type) params.set('type', type);
+                    const url = 'search.html' + (params.toString() ? ('?' + params.toString()) : '');
+                    window.location.href = url;
+                });
+            }
+
+            // Header/global search (uses the text input in the header)
+            const globalSearchInput = document.getElementById('global-search');
+            const globalSearchBtn = document.getElementById('global-search-btn');
+            if (globalSearchBtn && globalSearchInput) {
+                function handleGlobalSearch(e) {
+                    if (e) e.preventDefault();
+                    const q = encodeURIComponent(globalSearchInput.value.trim() || '');
+                    const url = 'search.html' + (q ? ('?q=' + q) : '');
+                    window.location.href = url;
+                }
+                globalSearchBtn.addEventListener('click', handleGlobalSearch);
+                // allow Enter key in the header input to trigger search
+                globalSearchInput.addEventListener('keydown', function(evt) {
+                    if (evt.key === 'Enter') handleGlobalSearch(evt);
+                });
+            }
+
+            // Theme toggle: default is light (white). Persist choice in localStorage.
+            const themeToggle = document.getElementById('theme-toggle');
+            function applyTheme(theme){
+                if (theme === 'dark'){
+                    document.documentElement.classList.add('dark-theme');
+                    themeToggle.setAttribute('aria-pressed','true');
+                    themeToggle.innerHTML = '<i class="fas fa-moon" aria-hidden="true"></i>';
+                } else {
+                    document.documentElement.classList.remove('dark-theme');
+                    themeToggle.setAttribute('aria-pressed','false');
+                    themeToggle.innerHTML = '<i class="fa-regular fa-sun" aria-hidden="true"></i>';
+                }
+            }
+
+            // Initialize theme from localStorage (or default to light)
+            try{
+                const stored = localStorage.getItem('site-theme');
+                applyTheme(stored === 'dark' ? 'dark' : 'light');
+            }catch(e){
+                applyTheme('light');
+            }
+
+            if (themeToggle){
+                themeToggle.addEventListener('click', function(){
+                    const isDark = document.documentElement.classList.contains('dark-theme');
+                    const next = isDark ? 'light' : 'dark';
+                    applyTheme(next);
+                    try{ localStorage.setItem('site-theme', next); }catch(e){}
+                });
+            }
+
+            // Event delegation for Details and Rent Now
+            document.body.addEventListener('click', function(e) {
+                const el = e.target.closest('.btn');
+                if (!el) return;
+
+                // Allow normal navigation if the button is an anchor with a real href (not "#")
+                if (el.tagName === 'A') {
+                    const href = el.getAttribute('href');
+                    if (href && href !== '#') {
+                        // let the browser handle the navigation
+                        return;
+                    }
+                }
+
+                // Prevent default only for buttons that don't have a real href
+                e.preventDefault();
+
+                // Details (.btn-outline) fallback behavior if no href
+                if (el.classList.contains('btn-outline')) {
+                    const card = el.closest('.vehicle-card');
+                    const title = card ? (card.querySelector('.vehicle-title')?.textContent || 'Vehicle') : 'Vehicle';
+                    const img = card ? (card.querySelector('.vehicle-image img')?.src || '') : '';
+                    const details = card ? (card.querySelector('.vehicle-details')?.innerHTML || '') : '';
+                    showModal(`<h3>${title}</h3>
+                        ${img ? `<img src="${img}" alt="${title}" style="width:100%;height:auto;border-radius:6px;margin:8px 0;">` : ''}
+                        <div>${details}</div>
+                        <p style='margin-top:8px;color:var(--muted)'>This is a demo details view.</p>`);
+                    return;
+                }
+
+                // Rent Now (.btn-primary) fallback behavior if no href
+                if (el.classList.contains('btn-primary')) {
+                    const card = el.closest('.vehicle-card');
+                    const title = card ? (card.querySelector('.vehicle-title')?.textContent || 'Vehicle') : 'Vehicle';
+                    showModal(`<h3>Rent ${title}</h3>
+                        <p>Fill the quick booking form below (demo).</p>
+                        <form id="booking-form">
+                            <label>Name</label>
+                            <input type="text" id="bk-name" placeholder="Your name" style="width:100%;padding:8px;margin:6px 0;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--dark)">
+                            <label>Phone or Email</label>
+                            <input type="text" id="bk-contact" placeholder="Phone or email" style="width:100%;padding:8px;margin:6px 0;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--dark)">
+                            <div style="margin-top:10px;text-align:right">
+                                <button type="submit" class="btn btn-primary" style="padding:8px 14px;border-radius:6px">Confirm Booking</button>
+                            </div>
+                        </form>`);
+
+                    return;
+                }
+            });
+
+            // Sign In / Register links
+            document.querySelectorAll('.auth-links a').forEach(a => {
+                a.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const isRegister = this.textContent.toLowerCase().includes('register');
+                    showModal(`<h3>${isRegister ? 'Register' : 'Sign In'}</h3>
+                        <form id="auth-form">
+                            <label>Email</label>
+                            <input type="email" id="auth-email" placeholder="you@example.com" style="width:100%;padding:8px;margin:6px 0;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--dark)">
+                            <label>Password</label>
+                            <input type="password" id="auth-pass" placeholder="password" style="width:100%;padding:8px;margin:6px 0;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--dark)">
+                            <div style="margin-top:10px;text-align:right">
+                                <button type="submit" class="btn btn-primary">${isRegister ? 'Create account' : 'Sign In'}</button>
+                            </div>
+                        </form>`);
+                });
+            });
+
+            // Modal close
+            const modal = document.getElementById('modal');
+            const modalClose = modal ? modal.querySelector('.modal-close') : null;
+            if (modalClose) modalClose.addEventListener('click', hideModal);
+            if (modal) modal.addEventListener('click', function(e){ if (e.target === modal) hideModal(); });
+
+            // Booking and auth form handling via delegation
+            document.body.addEventListener('submit', function(e) {
+                if (e.target && e.target.id === 'booking-form') {
+                    e.preventDefault();
+                    const name = document.getElementById('bk-name')?.value || '';
+                    const contact = document.getElementById('bk-contact')?.value || '';
+                    hideModal();
+                    alert('Booking confirmed (demo).\nName: ' + name + '\nContact: ' + contact);
+                }
+                if (e.target && e.target.id === 'auth-form') {
+                    e.preventDefault();
+                    const email = document.getElementById('auth-email')?.value || '';
+                    hideModal();
+                    alert('Auth submitted (demo).\nEmail: ' + email);
+                }
+            });
+
+            // Close modal helper
+            function hideModal(){
+                const m = document.getElementById('modal');
+                if (!m) return;
+                m.classList.remove('show');
+                m.setAttribute('aria-hidden','true');
+                document.body.style.overflow = '';
+            }
+
+            function showModal(html){
+                const m = document.getElementById('modal');
+                if (!m) return alert(html);
+                const body = document.getElementById('modal-body');
+                body.innerHTML = html;
+                m.classList.add('show');
+                m.setAttribute('aria-hidden','false');
+                document.body.style.overflow = 'hidden';
+            }
         });
     </script>
 </body>

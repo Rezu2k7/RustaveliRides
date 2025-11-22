@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Booking - Rustaveli Rides</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body{padding:24px;background:var(--light);color:var(--dark);font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif}
+    .card{background:var(--surface);padding:16px;border-radius:8px;box-shadow:var(--shadow);max-width:640px}
+    label{display:block;margin-top:8px}
+    input{width:100%;padding:8px;margin-top:6px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--dark)}
+    .actions{margin-top:12px;text-align:right}
+    a.back{display:inline-block;margin-bottom:12px;color:var(--secondary)}
+  </style>
+</head>
+<body>
+  <a class="back" href="index.html">← Back to home</a>
+  <div class="card">
+    <h1 id="title">Booking</h1>
+    <form id="booking">
+      <label>Vehicle</label>
+      <input id="vehicle" readonly>
+      <label>Your name</label>
+      <input id="name" required>
+      <label>Contact (phone or email)</label>
+      <input id="contact" required>
+      <div class="actions">
+        <button type="submit" class="btn btn-primary">Confirm booking (demo)</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const vehicle = params.get('vehicle') || '';
+    document.getElementById('vehicle').value = vehicle;
+
+    document.getElementById('booking').addEventListener('submit', function(e){
+      e.preventDefault();
+      const name = document.getElementById('name').value || '—';
+      const contact = document.getElementById('contact').value || '—';
+      alert('Booking received (demo)\nVehicle: ' + vehicle + '\nName: ' + name + '\nContact: ' + contact);
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>

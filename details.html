@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Vehicle Details - Rustaveli Rides</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body{padding:24px;background:var(--light);color:var(--dark);font-family:Segoe UI, Tahoma, Geneva, Verdana, sans-serif}
+    .card{background:var(--surface);padding:16px;border-radius:8px;box-shadow:var(--shadow)}
+    a.back{display:inline-block;margin-bottom:12px;color:var(--secondary)}
+  </style>
+</head>
+<body>
+  <a class="back" href="index.html">← Back to home</a>
+  <div id="content" class="card">
+    <h1 id="title">Vehicle details</h1>
+    <div id="meta"></div>
+    <p id="desc"></p>
+    <p><a id="rent-link" href="#" class="btn btn-primary">Rent Now</a></p>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const vehicle = params.get('vehicle') || 'unknown';
+
+    // Very small mapping for demo names
+    const map = {
+      'toyota-camry-2022': 'Toyota Camry 2022',
+      'mercedes-e-class': 'Mercedes E-Class',
+      'toyota-land-cruiser': 'Toyota Land Cruiser',
+      'hyundai-accent': 'Hyundai Accent'
+    };
+
+    const title = map[vehicle] || vehicle.replace(/-/g,' ');
+    document.getElementById('title').textContent = title;
+    document.getElementById('meta').innerHTML = '<strong>Vehicle slug:</strong> ' + vehicle;
+    document.getElementById('desc').textContent = 'This is a placeholder details page for ' + title + '. Replace with real content as needed.';
+
+    const rentLink = document.getElementById('rent-link');
+    rentLink.href = 'booking.html?vehicle=' + encodeURIComponent(vehicle);
+  </script>
+</body>
+</html>
