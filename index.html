@@ -286,38 +286,7 @@
             align-items: center; /* keep inputs and button on same horizontal line */
         }
 
-        /* small controls to tweak the search button position */
-        .offset-controls {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            min-width: 220px;
-            padding: 6px 10px;
-        }
-
-        .offset-controls label {
-            font-size: 13px;
-            color: var(--gray);
-        }
-
-        .offset-controls input[type="number"] {
-            width: 60px;
-            padding: 6px 8px;
-            border-radius: 6px;
-            border: 1px solid var(--surface-border);
-            background: var(--input-bg);
-            color: var(--text);
-            font-size: 14px;
-        }
-
-        .offset-controls button.reset-offset {
-            padding: 6px 8px;
-            border-radius: 6px;
-            border: 1px solid var(--surface-border);
-            background: transparent;
-            color: var(--text);
-            cursor: pointer;
-        }
+        /* offset-controls removed */
 
         .form-group {
             flex: 1;
@@ -354,6 +323,8 @@
             padding: 0 25px;
             /* match select/input height so it sits on same baseline */
             height: 40px;
+            /* visual nudge: move button 4px down */
+            transform: translateY(4px);
             font-size: 16px;
             cursor: pointer;
             transition: var(--transition);
@@ -852,15 +823,6 @@
                         <option value="van">Van/Minibus</option>
                     </select>
                 </div>
-                <!-- Offset controls: X (horizontal) and Y (vertical) -->
-                <div class="offset-controls" title="Adjust search button X/Y offsets">
-                    <label for="search-offset-x">X</label>
-                    <input id="search-offset-x" type="number" step="1" value="0" aria-label="Search button X offset in pixels">
-                    <label for="search-offset-y">Y</label>
-                    <input id="search-offset-y" type="number" step="1" value="0" aria-label="Search button Y offset in pixels">
-                    <button class="reset-offset" id="reset-offset" type="button" title="Reset offsets">Reset</button>
-                </div>
-
                 <button class="search-button">Search Vehicles</button>
             </div>
         </div>
@@ -1133,6 +1095,8 @@
                     const url = 'search.html' + (params.toString() ? ('?' + params.toString()) : '');
                     window.location.href = url;
                 });
+
+                // offset-controls removed
             }
 
             // Header/global search (uses the text input in the header)
